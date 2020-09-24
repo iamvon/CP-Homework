@@ -1,53 +1,50 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <random>
+#define maxn 25
 
 using namespace std;
 
-typedef pair<int, int> II;
-vector<II> dominos;
-int N;
-int res = -1;
-vector<bool> isRev;
-void getSol()
-{
-    int sumUp = 0, sumDown = 0;
-    int u, v;
-    for (int i = 0; i < N; ++i)
-    {
-        u = dominos[i].first;
-        v = dominos[i].second;
-        if (isRev[i])
-            swap(u, v);
-        sumUp += u;
-        sumDown += v;
+int n;
+int a[maxn];
+int res;
+int hieu;
+int x[maxn];
+int arr[maxn];
+int sum() {
+    int val = 0;
+    for(int i = 0; i < n; i++) {
+        val += (x[i]) ? a[i] : -a[i];
     }
-    if (res == -1)
-        res = abs(sumUp - sumDown);
-    res = min(res, abs(sumUp - sumDown));
+    return abs(val);
 }
-void findSol(int pos)
-{
-    if (pos == N)
-    {
-        getSol();
-        return;
+void tryy(int k) {
+    if(k == n) {
+        int val = sum();
+        if(val < res) {
+            res = val;
+            for(int i = 0; i < n; i++) arr[i] = x[i];
+        }
+    } else {
+        x[k] = 0;
+        tryy(k + 1);
+        x[k] = 1;
+        tryy(k + 1);
     }
-    isRev[pos] = false;
-    findSol(pos + 1);
-    isRev[pos] = true;
-    findSol(pos + 1);
 }
-int main()
-{
-    ios::sync_with_stdio(0);
-    freopen("1", "r", stdin);
-    cin >> N;
-    dominos.resize(N);
-    isRev.resize(N);
-    for (int i = 0; i < N; ++i)
-    {
-        cin >> dominos[i].first >> dominos[i].second;
+int main() {
+    hieu = 0;
+    cin >> n;
+    int tren, duoi;
+    for(int i = 0; i < n; i++) {
+        //tren = rand() % 7;
+        //duoi = rand() % 7;
+        cin >> tren >> duoi;
+        a[i] = tren - duoi;
+        hieu += a[i];
     }
-    findSol(0);
-    cout << res;
-    return 0;
+    res = abs(hieu);
+    tryy(0);
+
+    cout << res << endl;
+    //for(int i = 0; i < n; i++) if(arr[i] == 1) cout << i << " ";
 }

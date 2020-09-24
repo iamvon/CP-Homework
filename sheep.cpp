@@ -1,58 +1,51 @@
 #include <bits/stdc++.h>
-
 using namespace std;
-
-int N, L;
-int dd[9];
-vector<int> setDig;
-bool isFound = false;
-int numDig;
-vector<int> digits;
-int totalNum;
-void enumarate(int pos)
-{
-    if (isFound)
-        return;
-    if (pos == numDig)
-    {
-        totalNum++;
-        if (totalNum == N)
-        {
-            isFound = true;
-            for (auto val : digits)
-                cout << val;
-        }
-        return;
-    }
-    for (auto val : setDig)
-    {
-        if (pos == 0 && val == 0)
-            continue;
-        digits[pos] = val;
-        enumarate(pos + 1);
-    }
-}
-int main()
-{
-    ios::sync_with_stdio(0);
-    freopen("1", "r", stdin);
-    cin >> N >> L;
+int main() {
+    int n, nbL;
+    cin >> n;
+    cin >> nbL;
+    bool a[10];
+    for(int i = 0; i < 10; i++) a[i] = false;
     int val;
-    for (int i = 1; i <= L; ++i)
-    {
+    bool ko = true;
+    for(int i = 0; i < nbL; i++) {
         cin >> val;
-        dd[val] = 1;
+        a[val] = true;
+        if(val == 0) ko = false;
     }
-    for (int i = 0; i <= 9; ++i)
-        if (dd[i] == 0)
-            setDig.push_back(i);
-    numDig = 1;
-    while (true)
-    {
-        if (isFound)
-            break;
-        digits.resize(numDig);
-        enumarate(0);
-        numDig++;
+    vector<char> c;
+    for(int i = 0; i < 10; i++) if(!a[i]) c.push_back(i + 48);
+    int base = 10 - nbL;
+    string res;
+    if(base == 1) {
+        for(int i = 0; i < n; i++) cout << c[0];
+        return 0;
+    }
+    if(ko) {
+        while(n) {
+            res += c[n%base];
+            n /= base;
+
+        }
+        reverse(res.begin(), res.end());
+        cout << res;
+    } else {
+        int sum = 0;
+        int sl = 0;
+        int del = 1;
+        while(sum < n) {
+            sl++;
+            del *= base;
+            sum += del;
+        }
+        int th = n - sum + del - 1;
+        del = 1;
+        for(int k = 1; k <= sl; k++) {
+            int ind = th % (del * base) / del;
+            del *= base;
+            res += c[ind];
+        }
+        reverse(res.begin(), res.end());
+        cout << res;
     }
 }
